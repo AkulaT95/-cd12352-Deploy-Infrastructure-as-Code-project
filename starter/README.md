@@ -14,4 +14,4 @@
 ./run.sh delete cd12352-udagram-server
 
 ## Other considerations
-[Diagram](starter/Diagram.png)
+[Diagram](Diagram.png)
