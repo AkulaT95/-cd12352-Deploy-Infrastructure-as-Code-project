@@ -1,0 +1,55 @@
+#!/bin/bash
+# Automation script for CloudFormation templates. 
+#
+# Parameters
+#   $1: Execution mode. Valid values: deploy, delete, preview.
+#   $2: Name of the cloudformation stack.
+#   $3: Name of the template file.
+#   $4: Name of the parameters file.
+#
+# Usage examples:
+#   ./run.sh deploy cd12352-udagram-network network.yml network-parameters.json
+#   ./run.sh deploy cd12352-udagram-server udagram.yml udagram-parameters.json
+#   ./run.sh preview cd12352-udagram-network network.yml network-parameters.json
+#   ./run.sh preview cd12352-udagram-server udagram.yml udagram-parameters.json
+#   ./run.sh delete cd12352-udagram-network
+#   ./run.sh delete cd12352-udagram-server
+
+# Validate parameters
+if [[ $1 != "deploy" && $1 != "delete" && $1 != "preview" ]]; then
+    echo "ERROR: Incorrect execution mode. Valid values: deploy, delete, preview." >&2
+    exit 1
+fi
+
+readonly REGION="us-east-1"
+EXECUTION_MODE=$1
+STACK_NAME=$2
+TEMPLATE_FILE_NAME=starter/$3
+PARAMETERS_FILE_NAME=starter/$4
+
+# Execute CloudFormation CLI
+if [ $EXECUTION_MODE == "deploy" ]
+then
+    aws cloudformation deploy \
+        --stack-name $STACK_NAME \
+        --template-file $TEMPLATE_FILE_NAME \
+        --parameter-overrides file://$PARAMETERS_FILE_NAME \
+        --region=$REGION \
+        --capabilities CAPABILITY_NAMED_IAM
+fi
+if [ $EXECUTION_MODE == "delete" ]
+then
+    aws cloudformation delete-stack \
+        --stack-name $STACK_NAME \
+        --region=$REGION
+fi
+if [ $EXECUTION_MODE == "preview" ]
+then
+    aws cloudformation deploy \
+        --stack-name $STACK_NAME \
+        --template-file $TEMPLATE_FILE_NAME \
+        --parameter-overrides file://$PARAMETERS_FILE_NAME \
+        --no-execute-changeset \
+        --region=$REGION \
+        --capabilities CAPABILITY_NAMED_IAM
+fi
