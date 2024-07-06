@@ -15,3 +15,4 @@
 
 ## Other considerations
 [Diagram](Diagram.png)
+[LoadBalancerPublicUrl](http://cd1235-WebAp-3K2lgZgQ4V3P-1961066472.us-east-1.elb.amazonaws.com)
